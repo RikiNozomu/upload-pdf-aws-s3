@@ -1,0 +1,24 @@
+service: upload-pdf-s3
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-southeast-1
+  environment: ${file(env.json)}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+      Resource: "arn:aws:s3:::rikinozomu/*"
+
+functions:
+  uploadPdf:
+    handler: src/handlers/uploadPDFtoS3.handler
+    events:
+      - http:
+          path: upload
+          method: post
